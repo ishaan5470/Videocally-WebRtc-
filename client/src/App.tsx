@@ -8,23 +8,19 @@ import { JoinButton } from './components/JoinButton';
 
 
 function App() {
-  
+
   //in use Effect when our application is mounted we will connect to the server 
-  
- 
+
+
   return (
-    <RoomProvider>
- 
 
-    
-    
     <div className="App flex  justify-center items-center w-screen h-screen">
-   <JoinButton/>
+      <JoinButton />
 
-      
+
     </div>
-    </RoomProvider>
-  
+
+
   );
 }
 
