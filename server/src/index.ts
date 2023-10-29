@@ -1,7 +1,7 @@
 import express from "express";
 import http from "http";
 // adding out websockets to this server
-import {Server, Socket} from "socket.io";
+import {Server} from "socket.io";
 
 // we cannot see user is connected because our both server is running at different port so to fix this
 import cors from "cors";
@@ -22,10 +22,11 @@ io.on ("connection",(socket)=>{
     console.log("user is connected")
     // make a event listerner for join room
     RoomHandler(socket);
-    // socket.on("create-room",()=>{
+
+    // socket.on("join-room",()=>{
     //     console.log("user created the room")
     // })
-    
+
      // when the user shut downs the browser make a disconnnect event
      socket.on('disconnect',()=>{
         console.log("user is disconnected");
