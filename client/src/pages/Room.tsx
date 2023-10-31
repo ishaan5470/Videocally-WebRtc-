@@ -2,10 +2,11 @@
 import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { RoomContext, RoomProvider } from "../context/RoomContext";
+import { VideoPlayer } from "../components/VidePlayer";
 const Room=()=>{
     const {id}=useParams();
     //for user with the same link join the room we will use "ws" from our room context 
-    const {ws,me }=useContext(RoomContext)
+    const {ws,me,stream }=useContext(RoomContext)
     //on every id change  
     useEffect(()=>{
         if (me) {
@@ -20,6 +21,9 @@ const Room=()=>{
     return(
         <div>
             Room ${id}
+            <div>
+                <VideoPlayer stream={stream}/>
+            </div>
         </div>
     )
 }
