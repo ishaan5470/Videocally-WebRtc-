@@ -1,8 +1,11 @@
 import {  createContext, useEffect, useState } from "react";
+import { useReducer } from "react";
 import socketIOClient from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import Peer from "peerjs";
 import { v4 as uuidV4 } from "uuid";
+import { peersReducer } from "./PeerReducer";
+
 const WS= "http://localhost:8000";
 
 
@@ -51,7 +54,7 @@ export const RoomProvider:any=({children}:any)=>{
         if(!stream) return;
         //is we have both we will listen "user-joined" and also emit this even on our index.js in our server 
         
-        ws.on("user-joined",({peerId})=>{
+        ws.on("user-joined",({peerId})=>{ 
             //create call using peerobject 
             //here we are initiating the call and sending our stream
 
