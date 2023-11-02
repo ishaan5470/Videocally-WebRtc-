@@ -46,6 +46,7 @@ export const RoomProvider:any=({children}:any)=>{
         try {
             navigator?.mediaDevices?.getUserMedia({video:true,audio:true}).then((stream)=>{
                 setStream(stream);
+                console.log("this is my stream", stream)
             })
             
         } catch (error) {
@@ -68,8 +69,8 @@ export const RoomProvider:any=({children}:any)=>{
 
             const call=me.call(peerId,stream)
             //when our peer starts streams we dispatch an action 
-            call.on("stream",()=>{
-                dispatch(addPeerAction(peerId,stream));
+            call.on("stream",(peerstream)=>{
+                dispatch(addPeerAction(peerId,peerstream));
             })
 
         });
@@ -77,9 +78,16 @@ export const RoomProvider:any=({children}:any)=>{
             //answering peer's call and sending our stream to them 
 
             call.answer(stream);
+            //here in case of peerId we use call.peer (id of the person who is calling)
+
+            call.on("stream",(peerstream)=>{
+                dispatch(addPeerAction(call.peer,peerstream))
+            })
         })
 
     },[me,stream])
+
+  console.log({peers}, "these are my peers who joined")
 
     return(
     <RoomContext.Provider value={{ws,me,stream}}>

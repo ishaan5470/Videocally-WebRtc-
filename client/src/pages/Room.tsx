@@ -9,12 +9,12 @@ const Room=()=>{
     const {ws,me,stream }=useContext(RoomContext)
     //on every id change  
     useEffect(()=>{
-        if (me) {
+        if (me && me._id) {
         ws.emit("join-room",{roomId:id,peerId:me._id})
         }
-        // console.log(me._id, "me>>>>>>>>>>>>")
+        // console.log(me, "me>>>>>>>>>>>>")
         console.log(id,"room id it is ")
-        console.log(me._id,"peer id it is ")
+        console.log(me && me._id,"peer id it is ")
        
 
     } ,[id, me,ws ]) 
