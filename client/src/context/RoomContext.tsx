@@ -90,7 +90,7 @@ export const RoomProvider:any=({children}:any)=>{
   console.log({peers}, "these are my peers who joined")
 
     return(
-    <RoomContext.Provider value={{ws,me,stream}}>
+    <RoomContext.Provider value={{ws,me,stream,peers}}>
         {children}
         
     </RoomContext.Provider>  
