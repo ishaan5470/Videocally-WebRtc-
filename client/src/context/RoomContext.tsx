@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Peer from "peerjs";
 import { v4 as uuidV4 } from "uuid";
 import { peersReducer } from "./PeerReducer";
+import { addPeerAction } from "./PeerActions";
 
 const WS= "http://localhost:8000";
 
@@ -15,6 +16,13 @@ const ws=socketIOClient(WS);
 
 //export roomProvider from this file 
 export const RoomProvider:any=({children}:any)=>{
+
+    // using useReducer we will return two variables first one will be the state that is peers and second one is dispatch
+    const [peers,dispatch]=useReducer(peersReducer,{});  
+
+
+
+
 
     const navigate=useNavigate();
     //make state that represent out cuurent peer and this variable is a type peer coming from peerjs 
@@ -59,6 +67,10 @@ export const RoomProvider:any=({children}:any)=>{
             //here we are initiating the call and sending our stream
 
             const call=me.call(peerId,stream)
+            //when our peer starts streams we dispatch an action 
+            call.on("stream",()=>{
+                dispatch(addPeerAction(peerId,stream));
+            })
 
         });
         me.on('call',(call)=>{
