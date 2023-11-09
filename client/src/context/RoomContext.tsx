@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Peer from "peerjs";
 import { v4 as uuidV4 } from "uuid";
 import { peersReducer } from "./PeerReducer";
-import { addPeerAction } from "./PeerActions";
+import { addPeerAction, removePeerAction } from "./PeerActions";
 
 const WS= "http://localhost:8000";
 
@@ -37,6 +37,13 @@ export const RoomProvider:any=({children}:any)=>{
         console.log({roomId},"here is the room id ");
         navigate(`/room/${roomId}`);
     }
+
+    //function for removing peer 
+    const removePeer=(peerId:string)=>{
+        dispatch(removePeerAction(peerId))
+
+    }
+
     useEffect(()=>{
         console.log("room is joined");
         const meId=uuidV4();
@@ -55,6 +62,7 @@ export const RoomProvider:any=({children}:any)=>{
         }
         ws.on("room-created",enterRoom);
         ws.on("get-users",getUsers);
+        ws.on("user-disconnected",removePeer)
     },[]);
 
     //when we get our stream we need to call every peer in our room and they will send them there own stream to the room this is how peer to peer connetion works 
@@ -62,30 +70,37 @@ export const RoomProvider:any=({children}:any)=>{
         if(!me) return;
         if(!stream) return;
         //is we have both we will listen "user-joined" and also emit this even on our index.js in our server 
+       
         
         ws.on("user-joined",({peerId})=>{ 
+            console.log("check chckec ????????????????")
             //create call using peerobject 
             //here we are initiating the call and sending our stream
+            
+          
 
             const call=me.call(peerId,stream)
             //when our peer starts streams we dispatch an action 
-            call.on("stream",(peerstream)=>{
-                dispatch(addPeerAction(peerId,peerstream));
+            call.on("stream",(peerStream)=>{
+            
+                dispatch(addPeerAction(peerId,peerStream));
+                console.log("this is calling functionality >>>>>>>>>>>>")
             })
 
         });
         me.on('call',(call)=>{
             //answering peer's call and sending our stream to them 
+            console.log("call thingy working")
 
             call.answer(stream);
             //here in case of peerId we use call.peer (id of the person who is calling)
 
-            call.on("stream",(peerstream)=>{
-                dispatch(addPeerAction(call.peer,peerstream))
+            call.on("stream",(peerStream)=>{
+                dispatch(addPeerAction(call?.peer,peerStream))
             })
         })
 
-    },[me,stream])
+    },[me,stream ])
 
   console.log({peers}, "these are my peers who joined")
 

@@ -1,5 +1,4 @@
 import { ADD_PEER,REMOVE_PEER } from "./PeerActions";
-import { JoinButton } from "../components/JoinButton";
  export type PeerState=Record<string,{stream:MediaStream}>;
 type PeerAction=
 |
@@ -23,8 +22,8 @@ export const peersReducer=(state:PeerState,action:PeerAction)=>{
                 ...state,
             [action.payload.peerId]:{
                 stream:action.payload.stream,
-            }
-            }
+            },
+        };
     
        case REMOVE_PEER:
         //we will filter our state and get rid of the peer we want to remove using ES6 syntax

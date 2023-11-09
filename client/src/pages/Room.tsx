@@ -22,7 +22,7 @@ const Room=()=>{
     return(
         <>
             Room ${id}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 rounded-full" >
                 <VideoPlayer stream={stream}/>
                 {Object.values(peers as PeerState).map((peer,index)=>(
 

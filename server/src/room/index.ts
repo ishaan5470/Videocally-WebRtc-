@@ -29,10 +29,14 @@ export const RoomHandler=(socket:Socket)=>{
 
         console.log("user joined the room",roomId,peerId)
         rooms[roomId].push(peerId);
+
+
+        socket.join(roomId);
+        // on every user joined to the room
         socket.to(roomId).emit("user-joined", {
             peerId,
+
         })
-        socket.join(roomId);
         socket.emit("get-users" ,{
             roomId,
             participants:rooms[roomId]
@@ -45,10 +49,14 @@ export const RoomHandler=(socket:Socket)=>{
     })
 }
 
-const LeaveRoom=({peerId,roomId}:IRoomParams)=>{
-    rooms[roomId]=rooms[roomId].filter((id)=>id!==peerId)
-    // emit the even to the room
-    socket.to(roomId).emit("user-disconnected",peerId)
+const LeaveRoom = ({ peerId, roomId }: IRoomParams) => {
+    if (rooms[roomId]) { // Check if rooms[roomId] is defined
+        rooms[roomId] = rooms[roomId].filter((id) => id !== peerId);
+        // Emit the event to the room
+        socket.to(roomId).emit("user-disconnected", peerId);
+    } else {
+        console.error(`Room with ID ${roomId} does not exist or is not initialized.`);
+    }
 }
     socket.on("create-room",createRoom)
 
